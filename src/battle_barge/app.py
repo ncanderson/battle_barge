@@ -1,10 +1,19 @@
 # Main entry point for the game
 
+# Standard imports
 import pygame
+
+# 3rd party imports
+
+# Module imports
+from battle_barge.managers import InputManager
 
 def run() -> None:
 
     pygame.init()
+
+    #################################
+    # Screen Initialization
 
     # Internal "logical" resolution for your game
     LOGICAL_SIZE = (1280, 720)
@@ -16,23 +25,32 @@ def run() -> None:
     # Create a surface at the logical resolution
     surface = pygame.Surface(LOGICAL_SIZE)
 
+    #################################
+    # Runtime object initialization
+
+    input_mngr = InputManager()
+
+
+    #################################
     # Main loop
+
     running = True
     clock = pygame.time.Clock()
+
     while running:
-        for event in pygame.event.get():
+
+        # Get events
+        events = pygame.event.get()
+
+        # Check for a quit event
+        for event in events:
             if event.type == pygame.QUIT:
                 running = False
 
-        ## Example: fill the logical surface
-        #surface.fill((30, 30, 30))  # dark gray background
+        # Check for user inputs
+        input_mngr.update(events)
 
-        # Draw something simple (centered rectangle)
-        pygame.draw.rect(
-            surface,
-            (200, 100, 50),
-            (LOGICAL_SIZE[0]//4, LOGICAL_SIZE[1]//4, LOGICAL_SIZE[0]//2, LOGICAL_SIZE[1]//2)
-        )
+
 
         # Scale logical surface to actual screen
         scaled_surface = pygame.transform.scale(surface, screen.get_size())
