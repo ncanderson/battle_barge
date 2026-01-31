@@ -8,13 +8,12 @@ version = "0.0.1"
 description = "A cross-platform NOT 40K game"
 readme = "README.md"
 requires-python = ">=3.10"
-
 dependencies = [
     "pygame>=2.5",
 ]
 
 [project.scripts]
-mygame = "mygame.__main__:main"
+battle-barge = "battle_barge.__main__:main"
 
 [tool.setuptools]
 package-dir = {"" = "src"}
