@@ -21,12 +21,17 @@ class MainMenuScene(SceneBase):
         @param app Reference to main game app
         """
         super().__init__(app)
-        # Load the font for this scene
-        self._font = app.assets().get_font("kingthings-spike", 48)
+
+        self._title_text = "Battle Barge"
+
+        # Load the fonts for this scene
+        self._title_font = app.assets().get_font("kingthings-spike", 72)
+        self._option_font = app.assets().get_font("kingthings-spike", 48)
 
         # Menu options
         self._options = ["New Game", "Quit"]
         self._selected_index = 0
+
 
     ############################################################################
     # Public Methods
@@ -61,18 +66,26 @@ class MainMenuScene(SceneBase):
         @brief Re-draw the scene
         @param screen Game screen to draw to
         """
-        # Black background
-        screen.fill((0, 0, 0))
+        screen.fill((0,0,0))  # clear
+
+        logical_width, logical_height = screen.get_size()
+
+        # Draw title
+        title_surface = self._title_font.render(self._title_text, True, (255, 255, 255))
+        title_x = logical_width // 2 - title_surface.get_width() // 2
+        title_y = int(logical_height * 0.1)
+        screen.blit(title_surface, (title_x, title_y))
+
+        # Draw menu options
+        start_y = logical_height * 0.3  # below title
+        spacing = logical_height * 0.1
 
         for i, option in enumerate(self._options):
-            # Highlight the currently selected option
             color = (255, 255, 0) if i == self._selected_index else (255, 255, 255)
-            text_surface = self._font.render(option, True, color)
+            text_surface = self._option_font.render(option, True, color)
 
-            # Center horizontally
-            x = screen.get_width() // 2 - text_surface.get_width() // 2
-            # Stack vertically with spacing
-            y = 200 + i * 80
+            x = logical_width // 2 - text_surface.get_width() // 2
+            y = int(start_y + i * spacing)
             screen.blit(text_surface, (x, y))
 
     ############################################################################

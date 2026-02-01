@@ -25,7 +25,7 @@ class App:
         @brief Set up main game object
         """
         # Internal "logical" resolution
-        self._LOGICAL_SIZE = (1280, 720)
+        self._LOGICAL_SIZE = (1920, 1080)
 
         # Create a surface at the logical resolution
         self._surface = pygame.Surface(self._LOGICAL_SIZE)
@@ -77,9 +77,6 @@ class App:
             # Handle input in the current scene
             if self._scene:
                 self._scene.handle_input(events)
-
-            # Update current scene
-            if self._scene:
                 self._scene.update(dt)
 
             # Clear logical surface
@@ -94,9 +91,21 @@ class App:
             #self._input_mngr.update(events)
 
             # Scale logical surface to actual screen
-            scaled_surface = pygame.transform.scale(self._surface,
-                                                    self._screen.get_size())
-            self._screen.blit(scaled_surface, (0, 0))
+            scale = min(
+                self._screen.get_width() / self._LOGICAL_SIZE[0],
+                self._screen.get_height() / self._LOGICAL_SIZE[1]
+            )
+            scaled_size = (
+                int(self._LOGICAL_SIZE[0] * scale),
+                int(self._LOGICAL_SIZE[1] * scale)
+            )
+            scaled_surface = pygame.transform.scale(self._surface, scaled_size)
+
+            # Center the scaled surface
+            x_offset = (self._screen.get_width() - scaled_size[0]) // 2
+            y_offset = (self._screen.get_height() - scaled_size[1]) // 2
+            self._screen.fill((0,0,0))
+            self._screen.blit(scaled_surface, (x_offset, y_offset))
 
             pygame.display.flip()
 
