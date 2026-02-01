@@ -2,12 +2,14 @@
 
 # Standard imports
 import pygame
+from pathlib import Path
 
 # 3rd party imports
 
 # Module imports
-from .scenes import MainMenuScene
+from .managers import AssetManager
 from .managers import InputManager
+from .scenes import MainMenuScene
 
 ################################################################################
 
@@ -18,10 +20,9 @@ class App:
 
     ############################################################################
 
-    def __init__(self, scene):
+    def __init__(self):
         """!
         @brief Set up main game object
-        @param scene Starting game scene
         """
         # Internal "logical" resolution
         self._LOGICAL_SIZE = (1280, 720)
@@ -34,13 +35,13 @@ class App:
         self._clock = pygame.time.Clock()
         self._running = False
 
-        # Start with the main menu scene
-        self._scene = scene
-
         # Define the path to the assets directory, so anything with access to App
         # can load resources
         root_dir = Path(__file__).parent
-        self._assets_dir = root_dir / "assets"
+        self._assets = AssetManager(root_dir)
+
+        # Create the Input Manager
+        self._input_mngr = InputManager()
 
     ############################################################################
     # Public Methods
@@ -57,13 +58,13 @@ class App:
 
         self._running = True
 
-        # Maybe these should be class attrs?
-        input_mngr = InputManager()
-
         #################################
         # Main loop
 
         while self._running:
+
+            # Delta time in seconds, 60 FPS cap
+            dt = self._clock.tick(60) / 1000
 
             # Get events
             events = pygame.event.get()
@@ -71,10 +72,26 @@ class App:
             # Check for a quit event
             for event in events:
                 if event.type == pygame.QUIT:
-                    self._quit()
+                    self.quit()
 
-            # Check for user inputs
-            input_mngr.update(events)
+            # Handle input in the current scene
+            if self._scene:
+                self._scene.handle_input(events)
+
+            # Update current scene
+            if self._scene:
+                self._scene.update(dt)
+
+            # Clear logical surface
+            self._surface.fill((0, 0, 0))
+
+            # Draw scene to logical surface
+            if self._scene:
+                self._scene.draw(self._surface)
+
+            ## Check for user inputs
+            # Is this needed anymore?
+            #self._input_mngr.update(events)
 
             # Scale logical surface to actual screen
             scaled_surface = pygame.transform.scale(self._surface,
@@ -82,16 +99,32 @@ class App:
             self._screen.blit(scaled_surface, (0, 0))
 
             pygame.display.flip()
-            self._clock.tick(60)
 
     ############################################################################
 
-    def get_assets_dir(self) -> str:
+    def set_start_scene(self, scene) -> None:
         """!
-        @brief Get the path to the assets directory
-        @return The absolute path to the assets directory
+        @brief Initialize the game's first scene
+        @param scene Starting game scene
         """
-        return self._assets_dir
+        self._scene = scene
+
+    ############################################################################
+
+    def assets(self) -> str:
+        """!
+        @brief Get the asset manager
+        @return The asset manager
+        """
+        return self._assets
+
+    ############################################################################
+
+    def quit(self) -> None:
+        """!
+        @brief Quit the game
+        """
+        self._running = False
 
     ############################################################################
     # Class Methods
@@ -105,9 +138,9 @@ class App:
         pygame.init()
 
         # Initialize the app, starting with the MainMenuScene
-        app = cls(MainMenuScene(None))
+        app = cls()
         # Re-inject app into the new scene, so the scene can access app
-        app._scene.app = app
+        app.set_start_scene(MainMenuScene(app))
 
         # Run
         app.run()
@@ -124,14 +157,6 @@ class App:
         @param scene The new scene to set as the active scene
         """
         self._scene = scene
-
-    ############################################################################
-
-    def _quit(self) -> None:
-        """!
-        @brief Quit the game
-        """
-        self._running = False
 
     ############################################################################
 

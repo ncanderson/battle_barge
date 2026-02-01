@@ -29,12 +29,6 @@ class SceneBase(ABC):
         self._next_scene = None
         self._finished = False
 
-        # A good gothicy font
-        kingthings_spike = self._app.get_assets_dir() / "kingthings-spike-font" / "KingthingsSpike-9X6Z.ttf"
-
-        # Set the default font
-        self._font = pygame.font.Font(kingthings_spike, 48)
-
     ############################################################################
 
     @abstractmethod
