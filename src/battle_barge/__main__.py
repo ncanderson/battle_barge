@@ -1,9 +1,9 @@
 # mygame/__main__.py
 
-from .app import run
+from .app import App
 
 def main() -> int:
-    run()
+    App.Init_app()
     return 0
 
 if __name__ == "__main__":

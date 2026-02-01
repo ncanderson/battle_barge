@@ -2,61 +2,181 @@
 
 # Standard imports
 import pygame
+from pathlib import Path
 
 # 3rd party imports
 
 # Module imports
+from .managers import AssetManager
 from .managers import InputManager
+from .scenes import MainMenuScene
 
-def run() -> None:
+################################################################################
 
-    pygame.init()
+class App:
+    """!
+    @brief Main class, managing all game state
+    """
 
-    #################################
-    # Screen Initialization
+    ############################################################################
 
-    # Internal "logical" resolution for your game
-    LOGICAL_SIZE = (1280, 720)
+    def __init__(self):
+        """!
+        @brief Set up main game object
+        """
+        # Internal "logical" resolution
+        self._LOGICAL_SIZE = (1920, 1080)
 
-    # Create the main window: borderless + scaled
-    flags = pygame.NOFRAME | pygame.SCALED | pygame.FULLSCREEN
-    screen = pygame.display.set_mode(LOGICAL_SIZE, flags)
+        # Create a surface at the logical resolution
+        self._surface = pygame.Surface(self._LOGICAL_SIZE)
+        self._screen = self._initialize_game_window()
 
-    # Create a surface at the logical resolution
-    surface = pygame.Surface(LOGICAL_SIZE)
+        # Runtime helpers
+        self._clock = pygame.time.Clock()
+        self._running = False
 
-    #################################
-    # Runtime object initialization
+        # Define the path to the assets directory, so anything with access to App
+        # can load resources
+        root_dir = Path(__file__).parent
+        self._assets = AssetManager(root_dir)
 
-    input_mngr = InputManager()
+        # Create the Input Manager
+        self._input_mngr = InputManager()
 
+    ############################################################################
+    # Public Methods
 
-    #################################
-    # Main loop
+    def run(self) -> None:
+        """!
+        @brief Main run loop of the game
+        @details This function is responsible for managing the lifetime of all
+        game objects and the main game loop
+        """
 
-    running = True
-    clock = pygame.time.Clock()
+        #################################
+        # Runtime object initialization
 
-    while running:
+        self._running = True
 
-        # Get events
-        events = pygame.event.get()
+        #################################
+        # Main loop
 
-        # Check for a quit event
-        for event in events:
-            if event.type == pygame.QUIT:
-                running = False
+        while self._running:
 
-        # Check for user inputs
-        input_mngr.update(events)
+            # Delta time in seconds, 60 FPS cap
+            dt = self._clock.tick(60) / 1000
 
+            # Get events
+            events = pygame.event.get()
 
+            # Check for a quit event
+            for event in events:
+                if event.type == pygame.QUIT:
+                    self.quit()
 
-        # Scale logical surface to actual screen
-        scaled_surface = pygame.transform.scale(surface, screen.get_size())
-        screen.blit(scaled_surface, (0, 0))
+            # Handle input in the current scene
+            if self._scene:
+                self._scene.handle_input(events)
+                self._scene.update(dt)
 
-        pygame.display.flip()
-        clock.tick(60)
+            # Clear logical surface
+            self._surface.fill((0, 0, 0))
 
-    pygame.quit()
+            # Draw scene to logical surface
+            if self._scene:
+                self._scene.draw(self._surface)
+
+            ## Check for user inputs
+            # Is this needed anymore?
+            #self._input_mngr.update(events)
+
+            # Scale logical surface to actual screen
+            scale = min(
+                self._screen.get_width() / self._LOGICAL_SIZE[0],
+                self._screen.get_height() / self._LOGICAL_SIZE[1]
+            )
+            scaled_size = (
+                int(self._LOGICAL_SIZE[0] * scale),
+                int(self._LOGICAL_SIZE[1] * scale)
+            )
+            scaled_surface = pygame.transform.scale(self._surface, scaled_size)
+
+            # Center the scaled surface
+            x_offset = (self._screen.get_width() - scaled_size[0]) // 2
+            y_offset = (self._screen.get_height() - scaled_size[1]) // 2
+            self._screen.fill((0,0,0))
+            self._screen.blit(scaled_surface, (x_offset, y_offset))
+
+            pygame.display.flip()
+
+    ############################################################################
+
+    def set_start_scene(self, scene) -> None:
+        """!
+        @brief Initialize the game's first scene
+        @param scene Starting game scene
+        """
+        self._scene = scene
+
+    ############################################################################
+
+    def assets(self) -> str:
+        """!
+        @brief Get the asset manager
+        @return The asset manager
+        """
+        return self._assets
+
+    ############################################################################
+
+    def quit(self) -> None:
+        """!
+        @brief Quit the game
+        """
+        self._running = False
+
+    ############################################################################
+    # Class Methods
+
+    @classmethod
+    def Init_app(cls):
+        """!
+        @brief Initialization, providing a class method for external callers
+        to set up the game
+        """
+        pygame.init()
+
+        # Initialize the app, starting with the MainMenuScene
+        app = cls()
+        # Re-inject app into the new scene, so the scene can access app
+        app.set_start_scene(MainMenuScene(app))
+
+        # Run
+        app.run()
+
+        # Exit
+        pygame.quit()
+
+    ############################################################################
+    # Private Methods
+
+    def _change_scene(self, scene) -> None:
+        """!
+        @brief Change the game scene
+        @param scene The new scene to set as the active scene
+        """
+        self._scene = scene
+
+    ############################################################################
+
+    def _initialize_game_window(self) -> pygame.Surface:
+        """!
+        @breif Set up the main game window
+        """
+        # Config for the main game window
+        flags = pygame.NOFRAME | pygame.SCALED | pygame.FULLSCREEN
+
+        # Return the configurd screen
+        return pygame.display.set_mode(self._LOGICAL_SIZE, flags)
+
+################################################################################
