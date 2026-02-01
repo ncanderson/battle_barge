@@ -6,7 +6,7 @@ import pygame
 # 3rd party imports
 
 # Module imports
-from battle_barge.managers import InputManager
+from .managers import InputManager
 
 def run() -> None:
 
@@ -19,7 +19,7 @@ def run() -> None:
     LOGICAL_SIZE = (1280, 720)
 
     # Create the main window: borderless + scaled
-    flags = pygame.NOFRAME | pygame.SCALED
+    flags = pygame.NOFRAME | pygame.SCALED | pygame.FULLSCREEN
     screen = pygame.display.set_mode(LOGICAL_SIZE, flags)
 
     # Create a surface at the logical resolution

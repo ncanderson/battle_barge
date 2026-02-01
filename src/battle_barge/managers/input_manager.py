@@ -4,7 +4,6 @@ import pygame
 # 3rd party imports
 
 # Module imports
-from battle_barge.managers import InputManager
 
 ################################################################################
 
