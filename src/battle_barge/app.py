@@ -37,6 +37,11 @@ class App:
         # Start with the main menu scene
         self._scene = scene
 
+        # Define the path to the assets directory, so anything with access to App
+        # can load resources
+        root_dir = Path(__file__).parent
+        self._assets_dir = root_dir / "assets"
+
     ############################################################################
     # Public Methods
 
@@ -78,6 +83,15 @@ class App:
 
             pygame.display.flip()
             self._clock.tick(60)
+
+    ############################################################################
+
+    def get_assets_dir(self) -> str:
+        """!
+        @brief Get the path to the assets directory
+        @return The absolute path to the assets directory
+        """
+        return self._assets_dir
 
     ############################################################################
     # Class Methods

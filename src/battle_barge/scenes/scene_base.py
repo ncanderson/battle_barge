@@ -2,6 +2,7 @@
 from abc import ABC, abstractmethod
 from importlib import resources
 import pathlib
+import sys
 
 # 3rd party imports
 import pygame
@@ -28,17 +29,8 @@ class SceneBase(ABC):
         self._next_scene = None
         self._finished = False
 
-        # Path to assets
-        pkg = sys.modules[__package__]
-        self._package_root = pathlib.Path(pkg.__file__).parent
-        self._assets_dir = self._package_root / "assets"
-
-        # Fonts
-        # Derived classes can set their own fonts if desired, using
-        # 'self._assets_dir' to build the path to the font to load
-
         # A good gothicy font
-        kingthings_spike = self._assets_dir / "kingthings-spike-font" / "KingthingsSpike-9X6Z.ttf"
+        kingthings_spike = self._app.get_assets_dir() / "kingthings-spike-font" / "KingthingsSpike-9X6Z.ttf"
 
         # Set the default font
         self._font = pygame.font.Font(kingthings_spike, 48)
