@@ -1,6 +1,7 @@
 # Standard imports
 from abc import ABC, abstractmethod
 from importlib import resources
+from typing import Optional
 import pathlib
 import sys
 
@@ -8,6 +9,7 @@ import sys
 import pygame
 
 # Module imports
+from battle_barge.managers import AssetManager
 
 ################################################################################
 
@@ -19,15 +21,35 @@ class SceneBase(ABC):
 
     ############################################################################
 
-    def __init__(self, app):
+    def __init__(self, assets: Optional[AssetManager] = None):
         """!
         @brief Constructor
-        @param app The app instanace
+        @param assets Optional instance of the asset manager
         """
-        # Boilerplate
-        self._app = app
+        # Manager is injected when scene is added to the stack
+        self._manager = None
+
+        # Optional flag for requesting a scene change
         self._next_scene = None
-        self._finished = False
+
+    ############################################################################
+    # Lifecycle hooks
+
+    @abstractmethod
+    def on_enter(self):
+        """!
+        @brief Called when the scene becomes active (pushed or changed)
+        """
+        pass
+
+    ############################################################################
+
+    @abstractmethod
+    def on_exit(self):
+        """!
+        @brief Called when the scene is removed from the stack
+        """
+        pass
 
     ############################################################################
 
@@ -52,7 +74,7 @@ class SceneBase(ABC):
     ############################################################################
 
     @abstractmethod
-    def draw(self, screen):
+    def draw(self, surface):
         """!
         @brief Re-draw the scene
         @param screen Game screen to draw to

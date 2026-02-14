@@ -2,5 +2,6 @@
 # added should be included here to facilitate discovery elsewhere
 
 from .main_menu_scene import MainMenuScene
+from .scene_base import SceneBase
 
-__all__ = ["MainMenuScene"]
+__all__ = ["MainMenuScene", "SceneBase"]

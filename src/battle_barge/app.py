@@ -9,6 +9,7 @@ from pathlib import Path
 # Module imports
 from .managers import AssetManager
 from .managers import InputManager
+from .managers import SceneManager
 from .scenes import MainMenuScene
 
 ################################################################################
@@ -34,6 +35,9 @@ class App:
         # Runtime helpers
         self._clock = pygame.time.Clock()
         self._running = False
+
+        # Create the scene manager that will handle scene transitions
+        self._scene_manager = SceneManager()
 
         # Define the path to the assets directory, so anything with access to App
         # can load resources
@@ -74,21 +78,15 @@ class App:
                 if event.type == pygame.QUIT:
                     self.quit()
 
-            # Handle input in the current scene
-            if self._scene:
-                self._scene.handle_input(events)
-                self._scene.update(dt)
+            # Scene input & update
+            self._scene_manager.handle_input(events)
+            self._scene_manager.update(dt)
 
             # Clear logical surface
             self._surface.fill((0, 0, 0))
 
-            # Draw scene to logical surface
-            if self._scene:
-                self._scene.draw(self._surface)
-
-            ## Check for user inputs
-            # Is this needed anymore?
-            #self._input_mngr.update(events)
+            # Draw current scene
+            self._scene_manager.draw(self._surface)
 
             # Scale logical surface to actual screen
             scale = min(
@@ -120,6 +118,15 @@ class App:
 
     ############################################################################
 
+    def change_scene(self, scene) -> None:
+        """!
+        @brief Change the game scene
+        @param scene The new scene to set as the active scene
+        """
+        self._scene = scene
+
+    ############################################################################
+
     def assets(self) -> str:
         """!
         @brief Get the asset manager
@@ -146,10 +153,11 @@ class App:
         """
         pygame.init()
 
-        # Initialize the app, starting with the MainMenuScene
+        # Initialize the app
         app = cls()
-        # Re-inject app into the new scene, so the scene can access app
-        app.set_start_scene(MainMenuScene(app))
+
+        # Run the main menu
+        app._scene_manager.push(MainMenuScene(app._assets))
 
         # Run
         app.run()
@@ -159,15 +167,6 @@ class App:
 
     ############################################################################
     # Private Methods
-
-    def _change_scene(self, scene) -> None:
-        """!
-        @brief Change the game scene
-        @param scene The new scene to set as the active scene
-        """
-        self._scene = scene
-
-    ############################################################################
 
     def _initialize_game_window(self) -> pygame.Surface:
         """!

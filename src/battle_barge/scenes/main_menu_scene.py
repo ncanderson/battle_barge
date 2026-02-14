@@ -4,7 +4,8 @@ import pygame
 # 3rd party imports
 
 # Module imports
-from .scene_base import SceneBase
+from battle_barge.scenes.scene_base import SceneBase
+from battle_barge.managers import AssetManager
 
 ################################################################################
 
@@ -15,23 +16,39 @@ class MainMenuScene(SceneBase):
 
     ############################################################################
 
-    def __init__(self, app):
+    def __init__(self, assets: AssetManager):
         """!
         @brief Constructor
-        @param app Reference to main game app
+        @param assets Instance of the AssetManager
         """
-        super().__init__(app)
+        super().__init__()
 
         self._title_text = "Battle Barge"
 
         # Load the fonts for this scene
-        self._title_font = app.assets().get_font("kingthings-spike", 72)
-        self._option_font = app.assets().get_font("kingthings-spike", 48)
+        self._title_font = assets.get_font("kingthings-spike", 72)
+        self._option_font = assets.get_font("kingthings-spike", 48)
 
         # Menu options
         self._options = ["New Game", "Quit"]
         self._selected_index = 0
 
+    ############################################################################
+    # Lifecycle hooks
+
+    def on_enter(self):
+        """!
+        @brief Called when the scene becomes active (pushed or changed)
+        """
+        pass
+
+    ############################################################################
+
+    def on_exit(self):
+        """!
+        @brief Called when the scene is removed from the stack
+        """
+        pass
 
     ############################################################################
     # Public Methods
