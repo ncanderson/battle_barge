@@ -1,11 +1,15 @@
 # Standard imports
-import pygame
+from __future__ import annotations
+from typing import TYPE_CHECKING
 
 # 3rd party imports
+import pygame
 
 # Module imports
-from battle_barge.scenes.scene_base import SceneBase
-from battle_barge.managers import AssetManager
+from .scene_base import SceneBase
+if TYPE_CHECKING:
+    from battle_barge.managers import SceneManager
+    from battle_barge.managers import AssetManager
 
 ################################################################################
 
@@ -16,7 +20,9 @@ class MainMenuScene(SceneBase):
 
     ############################################################################
 
-    def __init__(self, assets: AssetManager):
+    def __init__(self,
+                 scene_manager: SceneManager,
+                 asset_manager: AssetManager):
         """!
         @brief Constructor
         @param assets Instance of the AssetManager
@@ -25,9 +31,12 @@ class MainMenuScene(SceneBase):
 
         self._title_text = "Battle Barge"
 
+        # Set the scene manager
+        self._scene_manager = scene_manager
+
         # Load the fonts for this scene
-        self._title_font = assets.get_font("kingthings-spike", 72)
-        self._option_font = assets.get_font("kingthings-spike", 48)
+        self._title_font = asset_manager.get_font("kingthings-spike", 72)
+        self._option_font = asset_manager.get_font("kingthings-spike", 48)
 
         # Menu options
         self._options = ["New Game", "Quit"]
@@ -114,10 +123,11 @@ class MainMenuScene(SceneBase):
         """
         option = self._options[self._selected_index]
         if option == "New Game":
-            # switch to your actual game scene
+
             print("Starting new game...")
-            # Example: self.app.scene = GameScene(self.app)
+
         elif option == "Quit":
-            self._app.quit()
+            print("Quitting")
+            self._scene_manager.request_quit()
 
 ################################################################################

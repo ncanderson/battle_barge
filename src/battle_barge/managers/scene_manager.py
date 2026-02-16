@@ -1,10 +1,9 @@
 # Standard imports
-import pygame
 
 # 3rd party imports
+import pygame
 
 # Module imports
-from battle_barge.scenes.scene_base import SceneBase
 
 ################################################################################
 
@@ -20,6 +19,7 @@ class SceneManager:
         @brief Constructor
         """
         self._stack = []
+        self._quit_requested = False
 
     ############################################################################
 
@@ -32,12 +32,29 @@ class SceneManager:
 
     ############################################################################
 
-    def push(self, scene: SceneBase):
+    @property
+    def quit_requested(self):
+        """!
+        @brief The current scene
+        """
+        return self._quit_requested
+
+    ############################################################################
+
+    def request_quit(self):
+        """!
+        @param Allow a scene to request a quit
+        """
+        print("REQUEST_QUIT")
+        self._quit_requested = True
+
+    ############################################################################
+
+    def push(self, scene: "SceneBase"):
         """!
         @brief Push a new scene on top
         @param scene The new scene to go onto the top of the stack
         """
-        scene.manager = self
         self._stack.append(scene)
         scene.on_enter()
 
@@ -53,7 +70,7 @@ class SceneManager:
 
     ############################################################################
 
-    def change(self, scene: SceneBase):
+    def change_scene(self, scene: "SceneBase"):
         """!
         @brief Replace the entire stack with a new scene
         @param scene The new scene

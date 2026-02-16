@@ -9,7 +9,6 @@ import sys
 import pygame
 
 # Module imports
-from battle_barge.managers import AssetManager
 
 ################################################################################
 
@@ -21,16 +20,27 @@ class SceneBase(ABC):
 
     ############################################################################
 
-    def __init__(self, assets: Optional[AssetManager] = None):
+    def __init__(self,
+                 scene_manager: Optional["SceneManager"] = None,
+                 asset_manager: Optional["AssetManager"] = None
+    ):
         """!
         @brief Constructor
-        @param assets Optional instance of the asset manager
+        @param scene_manager Optional instance of the scene manager
+        @param asset_manager Optional instance of the asset manager
         """
-        # Manager is injected when scene is added to the stack
-        self._manager = None
+        self._scene_manager = scene_manager
+        self._assets_manager = asset_manager
 
         # Optional flag for requesting a scene change
         self._next_scene = None
+
+    ############################################################################
+    # Class properties
+
+    @property
+    def next_scene(self):
+        return self._next_scene
 
     ############################################################################
     # Lifecycle hooks

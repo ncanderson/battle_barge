@@ -107,6 +107,10 @@ class App:
 
             pygame.display.flip()
 
+            # Check if any scenes have requested a quit
+            if self._scene_manager.quit_requested:
+                self._running = False
+
     ############################################################################
 
     def set_start_scene(self, scene) -> None:
@@ -157,7 +161,8 @@ class App:
         app = cls()
 
         # Run the main menu
-        app._scene_manager.push(MainMenuScene(app._assets))
+        app._scene_manager.push(MainMenuScene(app._scene_manager,
+                                              app._assets))
 
         # Run
         app.run()
