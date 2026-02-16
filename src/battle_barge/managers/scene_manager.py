@@ -1,4 +1,5 @@
 # Standard imports
+from __future__ import annotations
 
 # 3rd party imports
 import pygame
@@ -50,7 +51,7 @@ class SceneManager:
 
     ############################################################################
 
-    def push(self, scene: "SceneBase"):
+    def push(self, scene: SceneBase):
         """!
         @brief Push a new scene on top
         @param scene The new scene to go onto the top of the stack
@@ -70,7 +71,7 @@ class SceneManager:
 
     ############################################################################
 
-    def change_scene(self, scene: "SceneBase"):
+    def change_scene(self, scene: SceneBase):
         """!
         @brief Replace the entire stack with a new scene
         @param scene The new scene
