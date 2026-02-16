@@ -7,9 +7,6 @@ import pygame
 
 # Module imports
 from .scene_base import SceneBase
-if TYPE_CHECKING:
-    from battle_barge.managers import SceneManager
-    from battle_barge.managers import AssetManager
 
 ################################################################################
 
