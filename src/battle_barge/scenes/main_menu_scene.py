@@ -90,7 +90,8 @@ class MainMenuScene(SceneBase):
         @brief Re-draw the scene
         @param screen Game screen to draw to
         """
-        screen.fill((0,0,0))  # clear
+        # Clear
+        screen.fill((0,0,0))
 
         logical_width, logical_height = screen.get_size()
 
@@ -101,7 +102,7 @@ class MainMenuScene(SceneBase):
         screen.blit(title_surface, (title_x, title_y))
 
         # Draw menu options
-        start_y = logical_height * 0.3  # below title
+        start_y = logical_height * 0.3
         spacing = logical_height * 0.1
 
         for i, option in enumerate(self._options):
