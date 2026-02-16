@@ -1,12 +1,12 @@
 # Standard imports
 from __future__ import annotations
-from typing import TYPE_CHECKING
 
 # 3rd party imports
 import pygame
 
 # Module imports
 from .scene_base import SceneBase
+from .new_game_scene import NewGameScene
 
 ################################################################################
 
@@ -28,8 +28,9 @@ class MainMenuScene(SceneBase):
 
         self._title_text = "Battle Barge"
 
-        # Set the scene manager
+        # Set the necessary manager attributes
         self._scene_manager = scene_manager
+        self._asset_manager = asset_manager
 
         # Load the fonts for this scene
         self._title_font = asset_manager.get_font("kingthings-spike", 72)
@@ -120,11 +121,9 @@ class MainMenuScene(SceneBase):
         """
         option = self._options[self._selected_index]
         if option == "New Game":
-
-            print("Starting new game...")
-
+            self._scene_manager.push(NewGameScene(self._scene_manager,
+                                                  self._asset_manager))
         elif option == "Quit":
-            print("Quitting")
             self._scene_manager.request_quit()
 
 ################################################################################

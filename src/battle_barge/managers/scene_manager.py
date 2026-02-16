@@ -46,7 +46,6 @@ class SceneManager:
         """!
         @param Allow a scene to request a quit
         """
-        print("REQUEST_QUIT")
         self._quit_requested = True
 
     ############################################################################
