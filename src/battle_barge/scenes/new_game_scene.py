@@ -6,13 +6,12 @@ import pygame
 
 # Module imports
 from .scene_base import SceneBase
-from .new_game_scene import NewGameScene
 
 ################################################################################
 
-class MainMenuScene(SceneBase):
+class NewGameScene(SceneBase):
     """!
-    @brief Main menu scene
+    @brief New game scene
     """
 
     ############################################################################
@@ -26,19 +25,12 @@ class MainMenuScene(SceneBase):
         """
         super().__init__()
 
-        self._title_text = "Battle Barge"
-
         # Set the necessary manager attributes
         self._scene_manager = scene_manager
         self._asset_manager = asset_manager
 
-        # Load the fonts for this scene
-        self._title_font = asset_manager.get_font("kingthings-spike", 72)
-        self._option_font = asset_manager.get_font("kingthings-spike", 48)
-
-        # Menu options
-        self._options = ["New Game", "Quit"]
-        self._selected_index = 0
+        # placeholder
+        self._text_font = asset_manager.get_font("kingthings-spike", 48)
 
     ############################################################################
     # Lifecycle hooks
@@ -67,12 +59,12 @@ class MainMenuScene(SceneBase):
         """
         for event in events:
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_UP:
-                    self._selected_index = (self._selected_index - 1) % len(self._options)
-                elif event.key == pygame.K_DOWN:
-                    self._selected_index = (self._selected_index + 1) % len(self._options)
-                elif event.key == pygame.K_RETURN or event.key == pygame.K_KP_ENTER:
-                    self._activate_option()
+                # Exit this scene with spacebar
+                if event.key == pygame.K_SPACE:
+                    self._scene_manager.pop()
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                if self.button_rect and self.button_rect.collidepoint(event.pos):
+                    self._scene_manager.pop()
 
     ############################################################################
 
@@ -90,41 +82,32 @@ class MainMenuScene(SceneBase):
         @brief Re-draw the scene
         @param screen Game screen to draw to
         """
-        # Clear
-        screen.fill((0,0,0))
+        new_game_text = ""
 
+        screen.fill((0, 0, 0))
+
+        # Draw text centered
         logical_width, logical_height = screen.get_size()
 
-        # Draw title
-        title_surface = self._title_font.render(self._title_text, True, (255, 255, 255))
-        title_x = logical_width // 2 - title_surface.get_width() // 2
-        title_y = int(logical_height * 0.1)
-        screen.blit(title_surface, (title_x, title_y))
+        text_surface = self._text_font.render(new_game_text, True, (255, 255, 255))
 
-        # Draw menu options
-        start_y = logical_height * 0.3
-        spacing = logical_height * 0.1
+        x = logical_width // 2 - text_surface.get_width() // 2
+        y = logical_height // 2 - text_surface.get_height() // 2
+        screen.blit(text_surface, (x, y))
 
-        for i, option in enumerate(self._options):
-            color = (255, 255, 0) if i == self._selected_index else (255, 255, 255)
-            text_surface = self._option_font.render(option, True, color)
+        # Draw a prompt below the text
+        prompt_surface = self._text_font.render("Press Space or Click to continue", True, (255, 255, 0))
+        prompt_x = logical_width // 2 - prompt_surface.get_width() // 2
+        prompt_y = y + text_surface.get_height() + 20
+        screen.blit(prompt_surface, (prompt_x, prompt_y))
 
-            x = logical_width // 2 - text_surface.get_width() // 2
-            y = int(start_y + i * spacing)
-            screen.blit(text_surface, (x, y))
+        # Store prompt rectangle for click detection
+        self.button_rect = pygame.Rect(prompt_x,
+                                       prompt_y,
+                                       prompt_surface.get_width(),
+                                       prompt_surface.get_height())
 
     ############################################################################
     # Private Methods
-
-    def _activate_option(self) -> None:
-        """!
-        @brief Parse main menu scene options
-        """
-        option = self._options[self._selected_index]
-        if option == "New Game":
-            self._scene_manager.push(NewGameScene(self._scene_manager,
-                                                  self._asset_manager))
-        elif option == "Quit":
-            self._scene_manager.request_quit()
 
 ################################################################################

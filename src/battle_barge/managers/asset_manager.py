@@ -6,7 +6,6 @@ import pygame
 
 # Module imports
 
-
 ################################################################################
 
 class AssetManager:

@@ -1,6 +1,7 @@
 # Standard imports
 from abc import ABC, abstractmethod
 from importlib import resources
+from typing import Optional
 import pathlib
 import sys
 
@@ -19,15 +20,46 @@ class SceneBase(ABC):
 
     ############################################################################
 
-    def __init__(self, app):
+    def __init__(self,
+                 scene_manager: Optional["SceneManager"] = None,
+                 asset_manager: Optional["AssetManager"] = None
+    ):
         """!
         @brief Constructor
-        @param app The app instanace
+        @param scene_manager Optional instance of the scene manager
+        @param asset_manager Optional instance of the asset manager
         """
-        # Boilerplate
-        self._app = app
+        self._scene_manager = scene_manager
+        self._assets_manager = asset_manager
+
+        # Optional flag for requesting a scene change
         self._next_scene = None
-        self._finished = False
+
+    ############################################################################
+    # Class properties
+
+    @property
+    def next_scene(self):
+        return self._next_scene
+
+    ############################################################################
+    # Lifecycle hooks
+
+    @abstractmethod
+    def on_enter(self):
+        """!
+        @brief Called when the scene becomes active (pushed or changed)
+        """
+        pass
+
+    ############################################################################
+
+    @abstractmethod
+    def on_exit(self):
+        """!
+        @brief Called when the scene is removed from the stack
+        """
+        pass
 
     ############################################################################
 
@@ -52,7 +84,7 @@ class SceneBase(ABC):
     ############################################################################
 
     @abstractmethod
-    def draw(self, screen):
+    def draw(self, surface):
         """!
         @brief Re-draw the scene
         @param screen Game screen to draw to

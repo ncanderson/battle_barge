@@ -1,6 +1,6 @@
 # mygame/__main__.py
 
-from .app import App
+from battle_barge.app import App
 
 def main() -> int:
     App.Init_app()
