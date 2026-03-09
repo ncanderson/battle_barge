@@ -2,6 +2,7 @@
 from pathlib import Path
 
 # 3rd party imports
+from pygame import Surface
 import pygame
 
 # Module imports
@@ -32,6 +33,7 @@ class AssetManager:
         # Images
         self._images_dir = self._assets_dir / "images"
         self._images = {}
+        self._load_all_images()
 
         # Sounds
         self._sounds_dir = self._assets_dir / "sounds"
@@ -57,6 +59,18 @@ class AssetManager:
             font_path = self._font_paths[name]
             self._fonts[key] = pygame.font.Font(str(font_path), size)
         return self._fonts[key]
+
+    ############################################################################
+
+    def get_image(self, name: str) -> Surface:
+        """!
+        @brief Get the path to an image
+        @param name The image name preloaded by this class
+        @returns The Path to the image file
+        """
+        if name not in self._images:
+            raise RuntimeError(f"Unable to locate this image: {name}")
+        return self._images[name]
 
     ############################################################################
     # Private Methods
@@ -88,13 +102,29 @@ class AssetManager:
         """!
         @brief Load all images from the assets directory
         """
-        pass
+        # Find all images files in the image dir
+        for img_path in self._images_dir.glob("*.*"):
+            if img_path.suffix.lower() in [".png", ".jpg", ".jpeg", ".bmp"]:
+                # Load the image
+                image = pygame.image.load(img_path)
+
+                # Use convert_alpha() for images that support transparency
+                # Note that if the image doesn't have transparency, this won't
+                # matter, but doing it will help limit future work
+                if img_path.suffix.lower() == ".png":
+                    image = image.convert_alpha()
+                else:
+                    image = image.convert()
+
+                # Store by file stem, which is the filename without extension
+                # This is how other classes will get the image
+                self._images[img_path.stem] = image
 
     ############################################################################
 
-    def _load_all_images(self) -> None:
+    def _load_all_sounds(self) -> None:
         """!
-        @brief Load all images from the assets directory
+        @brief Load all sounds from the assets directory
         """
         pass
 
