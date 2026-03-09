@@ -24,17 +24,13 @@ class MainMenuScene(SceneBase):
         @brief Constructor
         @param assets Instance of the AssetManager
         """
-        super().__init__()
+        super().__init__(scene_manager, asset_manager)
 
         self._title_text = "Battle Barge"
 
         # Set the necessary manager attributes
         self._scene_manager = scene_manager
         self._asset_manager = asset_manager
-
-        # Load the fonts for this scene
-        self._title_font = asset_manager.get_font("kingthings-spike", 72)
-        self._option_font = asset_manager.get_font("kingthings-spike", 48)
 
         # Menu options
         self._options = ["New Game", "Quit"]
@@ -107,7 +103,7 @@ class MainMenuScene(SceneBase):
 
         for i, option in enumerate(self._options):
             color = (255, 255, 0) if i == self._selected_index else (255, 255, 255)
-            text_surface = self._option_font.render(option, True, color)
+            text_surface = self._menu_option_font.render(option, True, color)
 
             x = logical_width // 2 - text_surface.get_width() // 2
             y = int(start_y + i * spacing)

@@ -74,7 +74,13 @@ class AssetManager:
         # This function should be expanded to recursively search the 'fonts'
         # directory, and populate self._fonts with the discovered names of
         # each found .ttf file.
-        self._font_paths["kingthings-spike"] = self._fonts_dir / "kingthings-spike-font" / "KingthingsSpike-9X6Z.ttf"
+        self._font_paths["kingthings-spike"] = Path(self._fonts_dir /
+                                                    "kingthings-spike-font" /
+                                                    "KingthingsSpike-9X6Z.ttf")
+
+        self._font_paths["metal-lord"] = Path(self._fonts_dir /
+                                              "metal-lord" /
+                                              "METALORD.TTF")
 
     ############################################################################
 

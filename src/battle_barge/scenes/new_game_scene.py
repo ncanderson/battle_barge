@@ -24,15 +24,11 @@ class NewGameScene(SceneBase):
         @brief Constructor
         @param assets Instance of the AssetManager
         """
-        super().__init__()
+        super().__init__(scene_manager, asset_manager)
 
         # Set the necessary manager attributes
         self._scene_manager = scene_manager
         self._asset_manager = asset_manager
-
-        # placeholder
-        self._title_font = asset_manager.get_font("kingthings-spike", 48)
-        self._text_font = pygame.font.Font(pygame.font.get_default_font(), 12)
 
     ############################################################################
     # Lifecycle hooks
@@ -95,14 +91,6 @@ class NewGameScene(SceneBase):
         the Battle Barges. Vast cathedral-ships of steel and fury, they carry the Empire's
         judgment from one star system to the next. Wherever they arrive, war follows.
         You are newly appointed commander of one such vessel.
-        Before your command can begin, you must declare your allegiance. Each world of the Empire
-        breeds its warriors differently - some hardened by brutal deserts, others forged
-        in the crushing industry of hive cities, or tempered in the disciplined academies of
-        fortress planets. Choose your home world.
-        Its culture will shape your crew. Its traditions will guide your tactics.
-        And its people will look to you to carry their honor into the endless wars of the galaxy.
-        The Emperor’s light is fading.
-        It is time to bring war to the stars.
         """
 
         screen.fill((0, 0, 0))

@@ -35,6 +35,11 @@ class SceneBase(ABC):
         # Optional flag for requesting a scene change
         self._next_scene = None
 
+        # Load fonts for derived classes
+        self._title_font = asset_manager.get_font("metal-lord", 72)
+        self._menu_option_font = asset_manager.get_font("metal-lord", 48)
+        self._text_font = asset_manager.get_font("metal-lord", 24)
+
     ############################################################################
     # Class properties
 
