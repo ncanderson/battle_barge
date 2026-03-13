@@ -16,6 +16,19 @@ class SceneBase(ABC):
     """!
     @brief Abstract base class for scenes
     @details Implementing classes must implement all three of these functions
+    If desired, this is a good placeholder for new scenes, to make sure you are
+    transitioning into them successfully:
+
+    screen.fill((0, 0, 0))
+
+    text = self._text_font.render("PlanetSelectorScene",
+                                  True,
+                                  (255, 255, 255))
+
+    x = screen.get_width() // 2 - text.get_width() // 2
+    y = screen.get_height() // 2 - text.get_height() // 2
+
+    screen.blit(text, (x, y))
     """
 
     ############################################################################
@@ -34,6 +47,11 @@ class SceneBase(ABC):
 
         # Optional flag for requesting a scene change
         self._next_scene = None
+
+        # Load fonts for derived classes
+        self._title_font = asset_manager.get_font("metal-lord", 72)
+        self._menu_option_font = asset_manager.get_font("metal-lord", 48)
+        self._text_font = asset_manager.get_font("metal-lord", 24)
 
     ############################################################################
     # Class properties

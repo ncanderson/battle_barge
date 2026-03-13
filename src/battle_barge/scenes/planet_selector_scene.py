@@ -6,13 +6,12 @@ import pygame
 
 # Module imports
 from .scene_base import SceneBase
-from .new_game_scene import NewGameScene
 
 ################################################################################
 
-class MainMenuScene(SceneBase):
+class PlanetSelectorScene(SceneBase):
     """!
-    @brief Main menu scene
+    @brief Planet (and difficulty) selection scene
     """
 
     ############################################################################
@@ -26,15 +25,11 @@ class MainMenuScene(SceneBase):
         """
         super().__init__(scene_manager, asset_manager)
 
-        self._title_text = "Battle Barge"
-
         # Set the necessary manager attributes
         self._scene_manager = scene_manager
         self._asset_manager = asset_manager
 
-        # Menu options
-        self._options = ["New Game", "Quit"]
-        self._selected_index = 0
+        self._scene_background_image = asset_manager.get_image("galaxy-large")
 
     ############################################################################
     # Lifecycle hooks
@@ -62,13 +57,7 @@ class MainMenuScene(SceneBase):
         @param events Pygame events
         """
         for event in events:
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_UP:
-                    self._selected_index = (self._selected_index - 1) % len(self._options)
-                elif event.key == pygame.K_DOWN:
-                    self._selected_index = (self._selected_index + 1) % len(self._options)
-                elif event.key == pygame.K_RETURN or event.key == pygame.K_KP_ENTER:
-                    self._activate_option()
+            pass
 
     ############################################################################
 
@@ -86,41 +75,17 @@ class MainMenuScene(SceneBase):
         @brief Re-draw the scene
         @param screen Game screen to draw to
         """
-        # Clear
-        screen.fill((0,0,0))
-
+        # Get logical surface size
         logical_width, logical_height = screen.get_size()
+        background = self._asset_manager.get_image("galaxy-large")
+        # Scale background
+        bg_scaled = pygame.transform.scale(background,
+                                          (logical_width, logical_height))
 
-        # Draw title
-        title_surface = self._title_font.render(self._title_text, True, (255, 255, 255))
-        title_x = logical_width // 2 - title_surface.get_width() // 2
-        title_y = int(logical_height * 0.1)
-        screen.blit(title_surface, (title_x, title_y))
-
-        # Draw menu options
-        start_y = logical_height * 0.3
-        spacing = logical_height * 0.1
-
-        for i, option in enumerate(self._options):
-            color = (255, 255, 0) if i == self._selected_index else (255, 255, 255)
-            text_surface = self._menu_option_font.render(option, True, color)
-
-            x = logical_width // 2 - text_surface.get_width() // 2
-            y = int(start_y + i * spacing)
-            screen.blit(text_surface, (x, y))
+        # Draw it
+        screen.blit(bg_scaled, (0, 0))
 
     ############################################################################
     # Private Methods
-
-    def _activate_option(self) -> None:
-        """!
-        @brief Parse main menu scene options
-        """
-        option = self._options[self._selected_index]
-        if option == "New Game":
-            self._scene_manager.push(NewGameScene(self._scene_manager,
-                                                  self._asset_manager))
-        elif option == "Quit":
-            self._scene_manager.request_quit()
 
 ################################################################################
