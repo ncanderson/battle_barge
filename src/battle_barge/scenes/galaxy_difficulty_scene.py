@@ -10,7 +10,7 @@ from ..utils.polygon_utils import PolygonUtils
 
 ################################################################################
 
-class PlanetSelectorScene(SceneBase):
+class GalaxyDifficultyScene(SceneBase):
     """!
     @brief Planet (and difficulty) selection scene
     """
