@@ -6,6 +6,7 @@ import pygame
 
 # Module imports
 from .scene_base import SceneBase
+from ..utils.polygon_utils import PolygonUtils
 
 ################################################################################
 
@@ -30,6 +31,9 @@ class PlanetSelectorScene(SceneBase):
         self._asset_manager = asset_manager
 
         self._scene_background_image = asset_manager.get_image("galaxy-large")
+
+        # Points of the areas we're drawing
+        self._polygon_points = []
 
     ############################################################################
     # Lifecycle hooks
@@ -56,6 +60,8 @@ class PlanetSelectorScene(SceneBase):
         @brief Handle event input
         @param events Pygame events
         """
+        PolygonUtils.handle_polygon_input(events, self._polygon_points)
+
         for event in events:
             pass
 
@@ -77,6 +83,8 @@ class PlanetSelectorScene(SceneBase):
         """
         # Get logical surface size
         logical_width, logical_height = screen.get_size()
+
+        # Galaxy background
         background = self._asset_manager.get_image("galaxy-large")
         # Scale background
         bg_scaled = pygame.transform.scale(background,
@@ -84,6 +92,12 @@ class PlanetSelectorScene(SceneBase):
 
         # Draw it
         screen.blit(bg_scaled, (0, 0))
+
+        # Draw debug polygon
+        #PolygonUtils.draw_polygon(screen, self._polygon_points)
+        self._polygon = [(663, 599), (532, 672), (746, 767), (875, 682)]
+        pygame.draw.polygon(screen, (255,255,0), self._polygon, 2)
+
 
     ############################################################################
     # Private Methods
