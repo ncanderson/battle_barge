@@ -6,6 +6,7 @@ import pygame
 
 # Module imports
 from .scene_base import SceneBase
+from .planet_selection_scene import PlanetSelectionScene
 from ..utils.polygon_utils import PolygonUtils
 
 ################################################################################
@@ -101,6 +102,8 @@ class GalaxyDifficultyScene(SceneBase):
                 # polygon that click is in
                 if self._hovered_zone:
                     print("Selected:", self._hovered_zone["name"])
+                    self._scene_manager.change_scene(PlanetSelectionScene(self._scene_manager,
+                                                                          self._asset_manager))
 
     ############################################################################
 
