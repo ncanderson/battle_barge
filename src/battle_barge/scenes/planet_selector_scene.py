@@ -148,6 +148,7 @@ class PlanetSelectorScene(SceneBase):
             pygame.draw.polygon(screen, color, zone["polygon"], 2)
 
         if self._hovered_zone:
+            # TODO make a helper util for this popup to facilitate re-use
             tooltip_text = f"{self._hovered_zone['difficulty']}:\n{self._hovered_zone['name']}"
             text_surface = self._text_font.render(tooltip_text, True, (255,255,255))
             mx, my = self._mouse_pos
