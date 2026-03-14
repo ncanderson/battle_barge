@@ -21,7 +21,7 @@ class SceneBase(ABC):
 
     screen.fill((0, 0, 0))
 
-    text = self._text_font.render("PlanetSelectorScene",
+    text = self._text_font.render("SceneName",
                                   True,
                                   (255, 255, 255))
 
