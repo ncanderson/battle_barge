@@ -19,18 +19,20 @@ class MainMenuScene(SceneBase):
 
     def __init__(self,
                  scene_manager: SceneManager,
-                 asset_manager: AssetManager):
+                 asset_manager: AssetManager,
+                 game_state: GameState):
         """!
         @brief Constructor
         @param assets Instance of the AssetManager
         """
-        super().__init__(scene_manager, asset_manager)
+        super().__init__(scene_manager, asset_manager, game_state)
 
         self._title_text = "Battle Barge"
 
         # Set the necessary manager attributes
         self._scene_manager = scene_manager
         self._asset_manager = asset_manager
+        self._game_state = game_state
 
         # Menu options
         self._options = ["New Game", "Quit"]
@@ -119,7 +121,8 @@ class MainMenuScene(SceneBase):
         option = self._options[self._selected_index]
         if option == "New Game":
             self._scene_manager.push(NewGameScene(self._scene_manager,
-                                                  self._asset_manager))
+                                                  self._asset_manager,
+                                                  self._game_state))
         elif option == "Quit":
             self._scene_manager.request_quit()
 

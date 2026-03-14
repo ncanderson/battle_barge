@@ -7,6 +7,7 @@ from pathlib import Path
 # 3rd party imports
 
 # Module imports
+from .game_objects import GameState
 from .managers import AssetManager
 from .managers import InputManager
 from .managers import SceneManager
@@ -43,6 +44,9 @@ class App:
         # can load resources
         root_dir = Path(__file__).parent
         self._assets = AssetManager(root_dir)
+
+        # The game state
+        self._game_state = GameState()
 
         # Create the Input Manager
         self._input_mngr = InputManager()
@@ -160,9 +164,12 @@ class App:
         # Initialize the app
         app = cls()
 
+        # TODO refactor scene base to accept app, and let scenes get stuff from
+        # from there, rather than passing all managers from class to class.
         # Run the main menu
         app._scene_manager.push(MainMenuScene(app._scene_manager,
-                                              app._assets))
+                                              app._assets,
+                                              app._game_state))
 
         # Run
         app.run()

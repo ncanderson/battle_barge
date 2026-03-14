@@ -18,16 +18,18 @@ class PlanetSelectionScene(SceneBase):
 
     def __init__(self,
                  scene_manager: SceneManager,
-                 asset_manager: AssetManager):
+                 asset_manager: AssetManager,
+                 game_state: GameState):
         """!
         @brief Constructor
         @param assets Instance of the AssetManager
         """
-        super().__init__(scene_manager, asset_manager)
+        super().__init__(scene_manager, asset_manager, game_state)
 
         # Set the necessary manager attributes
         self._scene_manager = scene_manager
         self._asset_manager = asset_manager
+        self._game_state = game_state
 
     ############################################################################
     # Lifecycle hooks
@@ -75,7 +77,7 @@ class PlanetSelectionScene(SceneBase):
         """
         screen.fill((0, 0, 0))
 
-        text = self._text_font.render("Planet Selection",
+        text = self._text_font.render(f"Planet Selection, difficulty: {self._game_state.difficulty}",
                                       True,
                                       (255, 255, 255))
 

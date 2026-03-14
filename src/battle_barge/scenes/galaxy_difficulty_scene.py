@@ -20,18 +20,20 @@ class GalaxyDifficultyScene(SceneBase):
 
     def __init__(self,
                  scene_manager: SceneManager,
-                 asset_manager: AssetManager):
+                 asset_manager: AssetManager,
+                 game_state: GameState):
         """!
         @brief Constructor
         @param assets Instance of the AssetManager
         """
-        super().__init__(scene_manager, asset_manager)
+        super().__init__(scene_manager, asset_manager, game_state)
 
         # Set the necessary manager attributes
         self._scene_manager = scene_manager
         self._asset_manager = asset_manager
+        self._game_state = game_state
 
-        # Mouse positio
+        # Mouse position
         self._mouse_pos = None
 
         # Background image
@@ -103,7 +105,8 @@ class GalaxyDifficultyScene(SceneBase):
                 if self._hovered_zone:
                     print("Selected:", self._hovered_zone["name"])
                     self._scene_manager.change_scene(PlanetSelectionScene(self._scene_manager,
-                                                                          self._asset_manager))
+                                                                          self._asset_manager,
+                                                                          self._game_state))
 
     ############################################################################
 

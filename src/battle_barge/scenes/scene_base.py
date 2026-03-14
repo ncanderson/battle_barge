@@ -35,15 +35,18 @@ class SceneBase(ABC):
 
     def __init__(self,
                  scene_manager: Optional["SceneManager"] = None,
-                 asset_manager: Optional["AssetManager"] = None
+                 asset_manager: Optional["AssetManager"] = None,
+                 game_state: Optional["GameState"] = None
     ):
         """!
         @brief Constructor
         @param scene_manager Optional instance of the scene manager
         @param asset_manager Optional instance of the asset manager
+        @param game_state Optional instance of the game state
         """
         self._scene_manager = scene_manager
         self._assets_manager = asset_manager
+        self._game_state = game_state
 
         # Optional flag for requesting a scene change
         self._next_scene = None
