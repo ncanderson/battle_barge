@@ -30,6 +30,7 @@ class PolygonUtils:
 
                 if event.key == pygame.K_BACKSPACE and points:
                     points.pop()
+                    print(points)
 
     ############################################################################
 
@@ -55,5 +56,33 @@ class PolygonUtils:
         @param points The list of points to format and print
         """
         print("[", ", ".join(f"({x},{y})" for x,y in points), "]")
+
+
+    ############################################################################
+
+    @staticmethod
+    def point_in_polygon(point, polygon):
+        """!
+        @brief Return True if point is inside polygon
+        @param point
+        @param polygon
+        @returns
+        """
+        x, y = point
+        inside = False
+
+        j = len(polygon) - 1
+
+        for i in range(len(polygon)):
+            xi, yi = polygon[i]
+            xj, yj = polygon[j]
+
+            if ((yi > y) != (yj > y)) and \
+               (x < (xj - xi) * (y - yi) / (yj - yi) + xi):
+                inside = not inside
+
+            j = i
+
+        return inside
 
 ################################################################################
