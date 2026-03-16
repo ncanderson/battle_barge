@@ -19,25 +19,18 @@ class GalaxyDifficultyScene(SceneBase):
     ############################################################################
 
     def __init__(self,
-                 scene_manager: SceneManager,
-                 asset_manager: AssetManager,
-                 game_state: GameState):
+                 app: App = None):
         """!
         @brief Constructor
-        @param assets Instance of the AssetManager
+        @param app
         """
-        super().__init__(scene_manager, asset_manager, game_state)
-
-        # Set the necessary manager attributes
-        self._scene_manager = scene_manager
-        self._asset_manager = asset_manager
-        self._game_state = game_state
+        super().__init__(app)
 
         # Mouse position
         self._mouse_pos = None
 
         # Background image
-        self._scene_background_image = asset_manager.get_image("galaxy-large")
+        self._scene_background_image = app.asset_manager.get_image("galaxy-large")
 
         # Start zones
         self._easy_zone = [(506, 640), (625, 591), (742, 639), (684, 747)]
@@ -104,9 +97,7 @@ class GalaxyDifficultyScene(SceneBase):
                 # polygon that click is in
                 if self._hovered_zone:
                     print("Selected:", self._hovered_zone["name"])
-                    self._scene_manager.change_scene(PlanetSelectionScene(self._scene_manager,
-                                                                          self._asset_manager,
-                                                                          self._game_state))
+                    self._app.scene_manager.change_scene(PlanetSelectionScene(self._app))
 
     ############################################################################
 
@@ -137,7 +128,7 @@ class GalaxyDifficultyScene(SceneBase):
         logical_width, logical_height = screen.get_size()
 
         # Galaxy background
-        background = self._asset_manager.get_image("galaxy-large")
+        background = self._app.asset_manager.get_image("galaxy-large")
         # Scale background
         bg_scaled = pygame.transform.scale(background,
                                           (logical_width, logical_height))

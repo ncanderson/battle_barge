@@ -1,2 +1,0 @@
-# Module declaration. Any additional files/classes that are
-# added should be included here to facilitate discovery elsewhere

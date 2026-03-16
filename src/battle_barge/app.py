@@ -7,11 +7,11 @@ from pathlib import Path
 # 3rd party imports
 
 # Module imports
-from .game_objects import GameState
-from .managers import AssetManager
-from .managers import InputManager
-from .managers import SceneManager
-from .scenes import MainMenuScene
+from .game_objects.game_state import GameState
+from .managers.asset_manager import AssetManager
+from .managers.input_manager import InputManager
+from .managers.scene_manager import SceneManager
+from .scenes.main_menu_scene import MainMenuScene
 
 ################################################################################
 
@@ -26,6 +26,10 @@ class App:
         """!
         @brief Set up main game object
         """
+
+        #################################
+        # Private
+
         # Internal "logical" resolution
         self._LOGICAL_SIZE = (1920, 1080)
 
@@ -37,19 +41,24 @@ class App:
         self._clock = pygame.time.Clock()
         self._running = False
 
-        # Create the scene manager that will handle scene transitions
-        self._scene_manager = SceneManager()
+        #################################
+        # Public
 
         # Define the path to the assets directory, so anything with access to App
-        # can load resources
+        # can load resources.
+        # AssetManager must be instantiated after _initialize_game_window() is called,
+        # or the loaded images won't know how to set themselves up.
         root_dir = Path(__file__).parent
-        self._assets = AssetManager(root_dir)
+        self.asset_manager = AssetManager(root_dir)
+
+        # Create the scene manager that will handle scene transitions
+        self.scene_manager = SceneManager()
 
         # The game state
-        self._game_state = GameState()
+        self.game_state = GameState()
 
-        # Create the Input Manager
-        self._input_mngr = InputManager()
+        # Input Manager
+        self.input_mngr = InputManager()
 
     ############################################################################
     # Public Methods
@@ -83,14 +92,14 @@ class App:
                     self.quit()
 
             # Scene input & update
-            self._scene_manager.handle_input(events)
-            self._scene_manager.update(dt)
+            self.scene_manager.handle_input(events)
+            self.scene_manager.update(dt)
 
             # Clear logical surface
             self._surface.fill((0, 0, 0))
 
             # Draw current scene
-            self._scene_manager.draw(self._surface)
+            self.scene_manager.draw(self._surface)
 
             # Scale logical surface to actual screen
             scale = min(
@@ -112,7 +121,7 @@ class App:
             pygame.display.flip()
 
             # Check if any scenes have requested a quit
-            if self._scene_manager.quit_requested:
+            if self.scene_manager.quit_requested:
                 self._running = False
 
     ############################################################################
@@ -164,12 +173,8 @@ class App:
         # Initialize the app
         app = cls()
 
-        # TODO refactor scene base to accept app, and let scenes get stuff from
-        # from there, rather than passing all managers from class to class.
         # Run the main menu
-        app._scene_manager.push(MainMenuScene(app._scene_manager,
-                                              app._assets,
-                                              app._game_state))
+        app.scene_manager.push(MainMenuScene(app))
 
         # Run
         app.run()

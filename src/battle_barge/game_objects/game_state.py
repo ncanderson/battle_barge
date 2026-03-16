@@ -17,7 +17,8 @@ class GameState():
         """!
         @brief Constructor
         """
-        self.
+        self.difficulty = 0
+
 
     ############################################################################
     # Public Methods

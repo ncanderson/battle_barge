@@ -34,27 +34,21 @@ class SceneBase(ABC):
     ############################################################################
 
     def __init__(self,
-                 scene_manager: Optional["SceneManager"] = None,
-                 asset_manager: Optional["AssetManager"] = None,
-                 game_state: Optional["GameState"] = None
+                 app: Optional["App"] = None
     ):
         """!
         @brief Constructor
-        @param scene_manager Optional instance of the scene manager
-        @param asset_manager Optional instance of the asset manager
-        @param game_state Optional instance of the game state
+        @param app
         """
-        self._scene_manager = scene_manager
-        self._assets_manager = asset_manager
-        self._game_state = game_state
+        self._app = app
 
         # Optional flag for requesting a scene change
         self._next_scene = None
 
         # Load fonts for derived classes
-        self._title_font = asset_manager.get_font("metal-lord", 72)
-        self._menu_option_font = asset_manager.get_font("metal-lord", 48)
-        self._text_font = asset_manager.get_font("metal-lord", 24)
+        self._title_font = app.asset_manager.get_font("metal-lord", 72)
+        self._menu_option_font = app.asset_manager.get_font("metal-lord", 48)
+        self._text_font = app.asset_manager.get_font("metal-lord", 24)
 
     ############################################################################
     # Class properties
