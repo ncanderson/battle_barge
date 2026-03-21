@@ -1,29 +1,20 @@
 # Standard imports
+from dataclasses import dataclass
 
 # 3rd party imports
 
 # Module imports
+from ..utils.game_defs import Difficulty
 
 ################################################################################
 
-class GameState():
+@dataclass
+class GameState:
     """!
     @brief Data for the game state
     """
+    player_name: str = "Player 1"
 
-    ############################################################################
-
-    def __init__(self):
-        """!
-        @brief Constructor
-        """
-        self.difficulty = 0
-
-
-    ############################################################################
-    # Public Methods
-
-    ############################################################################
-    # Private Methods
+    difficulty: Difficulty = Difficulty.MEDIUM
 
 ################################################################################

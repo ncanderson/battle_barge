@@ -54,7 +54,7 @@ class NewGameScene(SceneBase):
             if event.type == pygame.KEYDOWN:
                 # Exit this scene with spacebar
                 if event.key == pygame.K_SPACE:
-                    self._app.change_scene(GalaxyDifficultyScene(self._app))
+                    self._app.scene_manager.change_scene(GalaxyDifficultyScene(self._app))
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if self.button_rect and self.button_rect.collidepoint(event.pos):
                     self._app.scene_manager.change_scene(GalaxyDifficultyScene(self._app))

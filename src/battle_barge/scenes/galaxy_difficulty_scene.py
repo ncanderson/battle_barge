@@ -5,9 +5,10 @@ from __future__ import annotations
 import pygame
 
 # Module imports
-from .scene_base import SceneBase
-from .planet_selection_scene import PlanetSelectionScene
+from ..utils.game_defs import Difficulty
 from ..utils.polygon_utils import PolygonUtils
+from .planet_selection_scene import PlanetSelectionScene
+from .scene_base import SceneBase
 
 ################################################################################
 
@@ -42,17 +43,17 @@ class GalaxyDifficultyScene(SceneBase):
         self._zones = [
             {
                 "name": "Central Space",
-                "difficulty": "Easy",
+                "difficulty": Difficulty.EASY,
                 "polygon": self._easy_zone
             },
             {
                 "name": "Spiral Arm",
-                "difficulty": "Medium",
+                "difficulty": Difficulty.MEDIUM,
                 "polygon": self._med_zone
             },
             {
                 "name": "Galactic Core",
-                "difficulty": "Hard",
+                "difficulty": Difficulty.HARD,
                 "polygon": self._hard_zone
             }
         ]
@@ -97,6 +98,7 @@ class GalaxyDifficultyScene(SceneBase):
                 # polygon that click is in
                 if self._hovered_zone:
                     print("Selected:", self._hovered_zone["name"])
+                    self._app.game_state.difficulty = self._hovered_zone["difficulty"]
                     self._app.scene_manager.change_scene(PlanetSelectionScene(self._app))
 
     ############################################################################
@@ -131,7 +133,7 @@ class GalaxyDifficultyScene(SceneBase):
         background = self._app.asset_manager.get_image("galaxy-large")
         # Scale background
         bg_scaled = pygame.transform.scale(background,
-                                          (logical_width, logical_height))
+                                           (logical_width, logical_height))
 
         # Draw it
         screen.blit(bg_scaled, (0, 0))
