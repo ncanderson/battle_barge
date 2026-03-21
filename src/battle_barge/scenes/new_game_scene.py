@@ -18,17 +18,12 @@ class NewGameScene(SceneBase):
     ############################################################################
 
     def __init__(self,
-                 scene_manager: SceneManager,
-                 asset_manager: AssetManager):
+                 app: App = None):
         """!
         @brief Constructor
-        @param assets Instance of the AssetManager
+        @param app
         """
-        super().__init__(scene_manager, asset_manager)
-
-        # Set the necessary manager attributes
-        self._scene_manager = scene_manager
-        self._asset_manager = asset_manager
+        super().__init__(app)
 
     ############################################################################
     # Lifecycle hooks
@@ -59,12 +54,10 @@ class NewGameScene(SceneBase):
             if event.type == pygame.KEYDOWN:
                 # Exit this scene with spacebar
                 if event.key == pygame.K_SPACE:
-                    self._scene_manager.change_scene(GalaxyDifficultyScene(self._scene_manager,
-                                                                           self._asset_manager))
+                    self._app.scene_manager.change_scene(GalaxyDifficultyScene(self._app))
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if self.button_rect and self.button_rect.collidepoint(event.pos):
-                    self._scene_manager.change_scene(GalaxyDifficultyScene(self._scene_manager,
-                                                                           self._asset_manager))
+                    self._app.scene_manager.change_scene(GalaxyDifficultyScene(self._app))
 
     ############################################################################
 

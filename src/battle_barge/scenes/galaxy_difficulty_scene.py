@@ -5,8 +5,10 @@ from __future__ import annotations
 import pygame
 
 # Module imports
-from .scene_base import SceneBase
+from ..utils.game_defs import Difficulty
 from ..utils.polygon_utils import PolygonUtils
+from .planet_selection_scene import PlanetSelectionScene
+from .scene_base import SceneBase
 
 ################################################################################
 
@@ -18,23 +20,18 @@ class GalaxyDifficultyScene(SceneBase):
     ############################################################################
 
     def __init__(self,
-                 scene_manager: SceneManager,
-                 asset_manager: AssetManager):
+                 app: App = None):
         """!
         @brief Constructor
-        @param assets Instance of the AssetManager
+        @param app
         """
-        super().__init__(scene_manager, asset_manager)
+        super().__init__(app)
 
-        # Set the necessary manager attributes
-        self._scene_manager = scene_manager
-        self._asset_manager = asset_manager
-
-        # Mouse positio
+        # Mouse position
         self._mouse_pos = None
 
         # Background image
-        self._scene_background_image = asset_manager.get_image("galaxy-large")
+        self._scene_background_image = app.asset_manager.get_image("galaxy-large")
 
         # Start zones
         self._easy_zone = [(506, 640), (625, 591), (742, 639), (684, 747)]
@@ -46,17 +43,17 @@ class GalaxyDifficultyScene(SceneBase):
         self._zones = [
             {
                 "name": "Central Space",
-                "difficulty": "Easy",
+                "difficulty": Difficulty.EASY,
                 "polygon": self._easy_zone
             },
             {
                 "name": "Spiral Arm",
-                "difficulty": "Medium",
+                "difficulty": Difficulty.MEDIUM,
                 "polygon": self._med_zone
             },
             {
                 "name": "Galactic Core",
-                "difficulty": "Hard",
+                "difficulty": Difficulty.HARD,
                 "polygon": self._hard_zone
             }
         ]
@@ -101,6 +98,8 @@ class GalaxyDifficultyScene(SceneBase):
                 # polygon that click is in
                 if self._hovered_zone:
                     print("Selected:", self._hovered_zone["name"])
+                    self._app.game_state.difficulty = self._hovered_zone["difficulty"]
+                    self._app.scene_manager.change_scene(PlanetSelectionScene(self._app))
 
     ############################################################################
 
@@ -131,10 +130,10 @@ class GalaxyDifficultyScene(SceneBase):
         logical_width, logical_height = screen.get_size()
 
         # Galaxy background
-        background = self._asset_manager.get_image("galaxy-large")
+        background = self._app.asset_manager.get_image("galaxy-large")
         # Scale background
         bg_scaled = pygame.transform.scale(background,
-                                          (logical_width, logical_height))
+                                           (logical_width, logical_height))
 
         # Draw it
         screen.blit(bg_scaled, (0, 0))

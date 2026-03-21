@@ -1,66 +1,32 @@
 # Standard imports
-from abc import ABC, abstractmethod
-from importlib import resources
-from typing import Optional
-import pathlib
-import sys
+from __future__ import annotations
 
 # 3rd party imports
 import pygame
 
 # Module imports
+from .scene_base import SceneBase
 
 ################################################################################
 
-class SceneBase(ABC):
+class PlanetSelectionScene(SceneBase):
     """!
-    @brief Abstract base class for scenes
-    @details Implementing classes must implement all three of these functions
-    If desired, this is a good placeholder for new scenes, to make sure you are
-    transitioning into them successfully:
-
-    screen.fill((0, 0, 0))
-
-    text = self._text_font.render("SceneName",
-                                  True,
-                                  (255, 255, 255))
-
-    x = screen.get_width() // 2 - text.get_width() // 2
-    y = screen.get_height() // 2 - text.get_height() // 2
-
-    screen.blit(text, (x, y))
+    @brief New game scene
     """
 
     ############################################################################
 
     def __init__(self,
-                 app: Optional["App"] = None
-    ):
+                 app: App = None):
         """!
         @brief Constructor
         @param app
         """
-        self._app = app
-
-        # Optional flag for requesting a scene change
-        self._next_scene = None
-
-        # Load fonts for derived classes
-        self._title_font = app.asset_manager.get_font("metal-lord", 72)
-        self._menu_option_font = app.asset_manager.get_font("metal-lord", 48)
-        self._text_font = app.asset_manager.get_font("metal-lord", 24)
-
-    ############################################################################
-    # Class properties
-
-    @property
-    def next_scene(self):
-        return self._next_scene
+        super().__init__(app)
 
     ############################################################################
     # Lifecycle hooks
 
-    @abstractmethod
     def on_enter(self):
         """!
         @brief Called when the scene becomes active (pushed or changed)
@@ -69,7 +35,6 @@ class SceneBase(ABC):
 
     ############################################################################
 
-    @abstractmethod
     def on_exit(self):
         """!
         @brief Called when the scene is removed from the stack
@@ -77,18 +42,18 @@ class SceneBase(ABC):
         pass
 
     ############################################################################
+    # Public Methods
 
-    @abstractmethod
     def handle_input(self, events):
         """!
         @brief Handle event input
         @param events Pygame events
         """
-        pass
+        for event in events:
+            pass
 
     ############################################################################
 
-    @abstractmethod
     def update(self, dt):
         """!
         @brief Handle updates
@@ -98,12 +63,23 @@ class SceneBase(ABC):
 
     ############################################################################
 
-    @abstractmethod
-    def draw(self, surface):
+    def draw(self, screen):
         """!
         @brief Re-draw the scene
         @param screen Game screen to draw to
         """
-        pass
+        screen.fill((0, 0, 0))
+
+        text = self._text_font.render(f"Planet Selection, difficulty: {self._app.game_state.difficulty}",
+                                      True,
+                                      (255, 255, 255))
+
+        x = screen.get_width() // 2 - text.get_width() // 2
+        y = screen.get_height() // 2 - text.get_height() // 2
+
+        screen.blit(text, (x, y))
+
+    ############################################################################
+    # Private Methods
 
 ################################################################################
