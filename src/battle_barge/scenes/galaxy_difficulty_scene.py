@@ -7,7 +7,7 @@ import pygame
 # Module imports
 from ..utils.drawing_utils import DrawingUtils
 from ..utils.game_defs import Difficulty
-from ..utils.polygon_utils import PolygonUtils
+from ..utils.shape_utils import ShapeUtils
 from .planet_selection_scene import PlanetSelectionScene
 from .scene_base import SceneBase
 
@@ -88,7 +88,7 @@ class GalaxyDifficultyScene(SceneBase):
         @param events Pygame events
         """
         # Used for collecting points when figuring out where polygons should be
-        PolygonUtils.handle_polygon_input(events, self._polygon_points)
+        ShapeUtils.handle_polygon_input(events, self._polygon_points)
 
         for event in events:
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
@@ -113,7 +113,7 @@ class GalaxyDifficultyScene(SceneBase):
         self._hovered_zone = None
 
         for zone in self._zones:
-            if PolygonUtils.point_in_polygon(self._mouse_pos, zone["polygon"]):
+            if ShapeUtils.point_in_polygon(self._mouse_pos, zone["polygon"]):
                 self._hovered_zone = zone
                 break
 

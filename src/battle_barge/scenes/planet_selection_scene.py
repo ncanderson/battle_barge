@@ -5,9 +5,9 @@ from __future__ import annotations
 import pygame
 
 # Module imports
-from ..game_objects import Planet
+from ..game_objects.planet import Planet
 from ..utils.drawing_utils import DrawingUtils
-from ..utils.polygon_utils import PolygonUtils
+from ..utils.shape_utils import ShapeUtils
 from .scene_base import SceneBase
 
 ################################################################################
@@ -28,11 +28,11 @@ class PlanetSelectionScene(SceneBase):
         super().__init__(app)
 
         self._planets = [
-            Planet("Kharzug IX", (615, 298)),
-            Planet("Vanthex", (1175, 232)),
-            Planet("Dreggor II", (1344, 564)),
-            Planet("Skorn Vaal", (1398, 767)),
-            Planet("Brakkus Null", (493, 674))
+            Planet(name="Kharzug IX", coords=(615, 298)),
+            Planet(name="Vanthex", coords=(1175, 232)),
+            Planet(name="Dreggor II", coords=(1344, 564)),
+            Planet(name="Skorn Vaal", coords=(1398, 767)),
+            Planet(name="Brakkus Null", coords=(493, 674))
         ]
 
     ############################################################################
@@ -61,7 +61,11 @@ class PlanetSelectionScene(SceneBase):
         @param events Pygame events
         """
         # Used for collecting points when figuring out where polygons should be
-        PolygonUtils.handle_polygon_input(events, self._polygon_points)
+        ShapeUtils.handle_polygon_input(events, self._polygon_points)
+
+        mouse_pos = pygame.mouse.get_pos()
+        for planet in self._planets:
+            planet.update_hover(mouse_pos)
 
         for event in events:
             pass
@@ -89,8 +93,11 @@ class PlanetSelectionScene(SceneBase):
                                                 self._app.asset_manager,
                                                 "galaxy-spiral-arm")
 
+        for planet in self._planets:
+            planet.draw(screen, self._planet_img, self._text_font)
+
         # Draw debug polygon
-        #PolygonUtils.draw_polygon(screen, self._polygon_points)
+        #ShapeUtils.draw_polygon(screen, self._polygon_points)
 
 
     ############################################################################

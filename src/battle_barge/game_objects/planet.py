@@ -6,6 +6,7 @@ from typing import Optional
 import pygame
 
 # Module imports
+from ..utils.shape_utils import ShapeUtils
 
 ################################################################################
 
@@ -49,18 +50,16 @@ class Planet:
         """!
         @brief Check for hover collision from mouse position
         """
-        # Unpack mouse position
-        mx, my = mouse_pos
-        # Vector from planet center to the mouse position
-        dx = mx - self.coords[0]
-        dy = my - self.coords[1]
-        # Collision detection
-        self.is_hovered = (dx * dx + dy * dy) <= (self.radius * self.radius)
+        self.is_hovered = ShapeUtils.point_in_circle(mouse_pos,
+                                                     self.coords,
+                                                     self.radius)
 
     ############################################################################
 
     def draw(self, screen, planet_img, font):
-        # draw planet
+        """!
+        @brief Draw this planet on the screen
+        """
         img = planet_img
         if self.is_hovered:
             # optionally, you can tint the image or use a different hover image
