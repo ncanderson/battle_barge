@@ -3,6 +3,7 @@ from dataclasses import dataclass, field
 from typing import Optional
 
 # 3rd party imports
+from pygame import Surface
 import pygame
 
 # Module imports
@@ -20,6 +21,9 @@ class Planet:
 
     # @brief Screen coords
     coords: tuple[int, int]
+
+    # @brief The planet image
+    planet_image: Surface
 
     # @brief Optional on-hover tooltip
     tooltip: Optional[str] = None
@@ -64,7 +68,7 @@ class Planet:
         if self.is_hovered:
             # optionally, you can tint the image or use a different hover image
             img = pygame.transform.scale(planet_img, (self.radius*2+4, self.radius*2+4))
-        rect = img.get_rect(center=self.pos)
+        rect = img.get_rect(center=self.coords)
         screen.blit(img, rect)
 
         # draw tooltip if hovered
@@ -72,9 +76,9 @@ class Planet:
             text_surface = font.render(self.tooltip, True, (255, 255, 255))
             padding = 4
             box_rect = text_surface.get_rect(topleft=(rect.right + 8, rect.top))
-            box_rect.inflate_ip(padding*2, padding*2)
-            pygame.draw.rect(screen, (0,0,0), box_rect)
-            pygame.draw.rect(screen, (255,255,255), box_rect, 1)
+            box_rect.inflate_ip(padding * 2, padding * 2)
+            pygame.draw.rect(screen, (0, 0, 0), box_rect)
+            pygame.draw.rect(screen, (255, 255, 255), box_rect, 1)
             screen.blit(text_surface, (box_rect.x + padding, box_rect.y + padding))
 
 ################################################################################

@@ -27,12 +27,19 @@ class PlanetSelectionScene(SceneBase):
         """
         super().__init__(app)
 
+        # Temp image
+        planet_image = pygame.transform.smoothscale(
+            app.asset_manager.get_image("earth-test-image"),
+            (40, 40)
+        )
+
+        # Possible start planets
         self._planets = [
-            Planet(name="Kharzug IX", coords=(615, 298)),
-            Planet(name="Vanthex", coords=(1175, 232)),
-            Planet(name="Dreggor II", coords=(1344, 564)),
-            Planet(name="Skorn Vaal", coords=(1398, 767)),
-            Planet(name="Brakkus Null", coords=(493, 674))
+            Planet(name="Kharzug IX", coords=(615, 298), planet_image=planet_image),
+            Planet(name="Vanthex", coords=(1175, 232), planet_image=planet_image),
+            Planet(name="Dreggor II", coords=(1344, 564), planet_image=planet_image),
+            Planet(name="Skorn Vaal", coords=(1398, 767), planet_image=planet_image),
+            Planet(name="Brakkus Null", coords=(493, 674), planet_image=planet_image)
         ]
 
     ############################################################################
@@ -94,7 +101,7 @@ class PlanetSelectionScene(SceneBase):
                                                 "galaxy-spiral-arm")
 
         for planet in self._planets:
-            planet.draw(screen, self._planet_img, self._text_font)
+            planet.draw(screen, planet.planet_image, self._text_font)
 
         # Draw debug polygon
         #ShapeUtils.draw_polygon(screen, self._polygon_points)
