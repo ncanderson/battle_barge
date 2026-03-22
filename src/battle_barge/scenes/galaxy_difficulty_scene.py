@@ -5,6 +5,7 @@ from __future__ import annotations
 import pygame
 
 # Module imports
+from ..utils.drawing_utils import DrawingUtils
 from ..utils.game_defs import Difficulty
 from ..utils.polygon_utils import PolygonUtils
 from .planet_selection_scene import PlanetSelectionScene
@@ -90,7 +91,7 @@ class GalaxyDifficultyScene(SceneBase):
         @param events Pygame events
         """
         # Used for collecting points when figuring out where polygons should be
-        #PolygonUtils.handle_polygon_input(events, self._polygon_points)
+        PolygonUtils.handle_polygon_input(events, self._polygon_points)
 
         for event in events:
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
@@ -126,20 +127,15 @@ class GalaxyDifficultyScene(SceneBase):
         @brief Re-draw the scene
         @param screen Game screen to draw to
         """
-        # Get logical surface size
-        logical_width, logical_height = screen.get_size()
+        # Clear
+        screen.fill((0,0,0))
 
-        # Galaxy background
-        background = self._app.asset_manager.get_image("galaxy-large")
-        # Scale background
-        bg_scaled = pygame.transform.scale(background,
-                                           (logical_width, logical_height))
-
-        # Draw it
-        screen.blit(bg_scaled, (0, 0))
+        DrawingUtils.draw_fullscreen_background(screen,
+                                                self._app.asset_manager,
+                                                "galaxy-large")
 
         # Draw debug polygon
-        #PolygonUtils.draw_polygon(screen, self._polygon_points)
+        PolygonUtils.draw_polygon(screen, self._polygon_points)
 
         # The starting zones, checking for a zone under the mouse
         for zone in self._zones:

@@ -5,6 +5,7 @@ from __future__ import annotations
 import pygame
 
 # Module imports
+from ..utils.drawing_utils import DrawingUtils
 from .scene_base import SceneBase
 
 ################################################################################
@@ -68,7 +69,12 @@ class PlanetSelectionScene(SceneBase):
         @brief Re-draw the scene
         @param screen Game screen to draw to
         """
-        screen.fill((0, 0, 0))
+        # Clear
+        screen.fill((0,0,0))
+
+        DrawingUtils.draw_fullscreen_background(screen,
+                                                self._app.asset_manager,
+                                                "galaxy-spiral-arm")
 
         text = self._text_font.render(f"Planet Selection, difficulty: {self._app.game_state.difficulty}",
                                       True,
