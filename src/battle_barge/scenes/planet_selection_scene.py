@@ -5,7 +5,9 @@ from __future__ import annotations
 import pygame
 
 # Module imports
+from ..game_objects import Planet
 from ..utils.drawing_utils import DrawingUtils
+from ..utils.polygon_utils import PolygonUtils
 from .scene_base import SceneBase
 
 ################################################################################
@@ -25,6 +27,14 @@ class PlanetSelectionScene(SceneBase):
         """
         super().__init__(app)
 
+        self._planets = [
+            Planet("Kharzug IX", (615, 298)),
+            Planet("Vanthex", (1175, 232)),
+            Planet("Dreggor II", (1344, 564)),
+            Planet("Skorn Vaal", (1398, 767)),
+            Planet("Brakkus Null", (493, 674))
+        ]
+
     ############################################################################
     # Lifecycle hooks
 
@@ -32,7 +42,7 @@ class PlanetSelectionScene(SceneBase):
         """!
         @brief Called when the scene becomes active (pushed or changed)
         """
-        pass
+        print(f"Entering {self.__class__.__name__}")
 
     ############################################################################
 
@@ -50,6 +60,9 @@ class PlanetSelectionScene(SceneBase):
         @brief Handle event input
         @param events Pygame events
         """
+        # Used for collecting points when figuring out where polygons should be
+        PolygonUtils.handle_polygon_input(events, self._polygon_points)
+
         for event in events:
             pass
 
@@ -76,14 +89,9 @@ class PlanetSelectionScene(SceneBase):
                                                 self._app.asset_manager,
                                                 "galaxy-spiral-arm")
 
-        text = self._text_font.render(f"Planet Selection, difficulty: {self._app.game_state.difficulty}",
-                                      True,
-                                      (255, 255, 255))
+        # Draw debug polygon
+        #PolygonUtils.draw_polygon(screen, self._polygon_points)
 
-        x = screen.get_width() // 2 - text.get_width() // 2
-        y = screen.get_height() // 2 - text.get_height() // 2
-
-        screen.blit(text, (x, y))
 
     ############################################################################
     # Private Methods

@@ -45,6 +45,9 @@ class SceneBase(ABC):
         # Optional flag for requesting a scene change
         self._next_scene = None
 
+        # Empty vector to use in conjunction with the drawing tools
+        self._polygon_points = []
+
         # Load fonts for derived classes
         self._title_font = app.asset_manager.get_font("metal-lord", 72)
         self._menu_option_font = app.asset_manager.get_font("metal-lord", 48)

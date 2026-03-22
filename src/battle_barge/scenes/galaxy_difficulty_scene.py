@@ -62,9 +62,6 @@ class GalaxyDifficultyScene(SceneBase):
         # Storage for the zone under the mouse
         self._hovered_zone = None
 
-        # Empty vector to use in conjunction with the drawing tools
-        self._polygon_points = []
-
     ############################################################################
     # Lifecycle hooks
 
@@ -72,7 +69,7 @@ class GalaxyDifficultyScene(SceneBase):
         """!
         @brief Called when the scene becomes active (pushed or changed)
         """
-        pass
+        print(f"Entering {self.__class__.__name__}")
 
     ############################################################################
 
@@ -135,7 +132,7 @@ class GalaxyDifficultyScene(SceneBase):
                                                 "galaxy-large")
 
         # Draw debug polygon
-        PolygonUtils.draw_polygon(screen, self._polygon_points)
+        #PolygonUtils.draw_polygon(screen, self._polygon_points)
 
         # The starting zones, checking for a zone under the mouse
         for zone in self._zones:

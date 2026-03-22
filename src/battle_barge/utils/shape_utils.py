@@ -7,7 +7,7 @@ import pygame
 
 ################################################################################
 
-class PolygonUtils:
+class ShapeUtils:
 
     ############################################################################
 
@@ -84,5 +84,21 @@ class PolygonUtils:
             j = i
 
         return inside
+
+    ############################################################################
+
+    @staticmethod
+    def point_in_circle(coords_to_check: tuple[float, float],
+                        circle_center: tuple[float, float],
+                        circle_radius: float) -> bool:
+        """!
+        @brief Check if a point is inside a circle using tuples for coordinates
+        @param coords_to_check (x, y) of the incoming point, probably a mouse position
+        @param circle_center (x, y) of the circle center
+        @param circle_radius Radius of the circle
+        """
+        dx = coords_to_check[0] - circle_center[0]
+        dy = coords_to_check[1] - circle_center[1]
+        return dx * dx + dy * dy <= circle_radius * circle_radius
 
 ################################################################################
