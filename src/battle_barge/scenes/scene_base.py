@@ -21,7 +21,7 @@ class SceneBase(ABC):
 
     screen.fill((0, 0, 0))
 
-    text = self._text_font.render("PlanetSelectorScene",
+    text = self._text_font.render("SceneName",
                                   True,
                                   (255, 255, 255))
 
@@ -34,24 +34,24 @@ class SceneBase(ABC):
     ############################################################################
 
     def __init__(self,
-                 scene_manager: Optional["SceneManager"] = None,
-                 asset_manager: Optional["AssetManager"] = None
+                 app: Optional["App"] = None
     ):
         """!
         @brief Constructor
-        @param scene_manager Optional instance of the scene manager
-        @param asset_manager Optional instance of the asset manager
+        @param app
         """
-        self._scene_manager = scene_manager
-        self._assets_manager = asset_manager
+        self._app = app
 
         # Optional flag for requesting a scene change
         self._next_scene = None
 
+        # Empty vector to use in conjunction with the drawing tools
+        self._polygon_points = []
+
         # Load fonts for derived classes
-        self._title_font = asset_manager.get_font("metal-lord", 72)
-        self._menu_option_font = asset_manager.get_font("metal-lord", 48)
-        self._text_font = asset_manager.get_font("metal-lord", 24)
+        self._title_font = app.asset_manager.get_font("metal-lord", 72)
+        self._menu_option_font = app.asset_manager.get_font("metal-lord", 48)
+        self._text_font = app.asset_manager.get_font("metal-lord", 24)
 
     ############################################################################
     # Class properties

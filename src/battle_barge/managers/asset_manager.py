@@ -116,6 +116,8 @@ class AssetManager:
                 else:
                     image = image.convert()
 
+                print(f"Found image: {img_path.stem}")
+
                 # Store by file stem, which is the filename without extension
                 # This is how other classes will get the image
                 self._images[img_path.stem] = image

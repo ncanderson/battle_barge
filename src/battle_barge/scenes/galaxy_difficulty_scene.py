@@ -5,12 +5,15 @@ from __future__ import annotations
 import pygame
 
 # Module imports
+from ..utils.drawing_utils import DrawingUtils
+from ..utils.game_defs import Difficulty
+from ..utils.shape_utils import ShapeUtils
+from .planet_selection_scene import PlanetSelectionScene
 from .scene_base import SceneBase
-from ..utils.polygon_utils import PolygonUtils
 
 ################################################################################
 
-class PlanetSelectorScene(SceneBase):
+class GalaxyDifficultyScene(SceneBase):
     """!
     @brief Planet (and difficulty) selection scene
     """
@@ -18,23 +21,18 @@ class PlanetSelectorScene(SceneBase):
     ############################################################################
 
     def __init__(self,
-                 scene_manager: SceneManager,
-                 asset_manager: AssetManager):
+                 app: App = None):
         """!
         @brief Constructor
-        @param assets Instance of the AssetManager
+        @param app
         """
-        super().__init__(scene_manager, asset_manager)
+        super().__init__(app)
 
-        # Set the necessary manager attributes
-        self._scene_manager = scene_manager
-        self._asset_manager = asset_manager
-
-        # Mouse positio
+        # Mouse position
         self._mouse_pos = None
 
         # Background image
-        self._scene_background_image = asset_manager.get_image("galaxy-large")
+        self._scene_background_image = app.asset_manager.get_image("galaxy-large")
 
         # Start zones
         self._easy_zone = [(506, 640), (625, 591), (742, 639), (684, 747)]
@@ -46,26 +44,23 @@ class PlanetSelectorScene(SceneBase):
         self._zones = [
             {
                 "name": "Central Space",
-                "difficulty": "Easy",
+                "difficulty": Difficulty.EASY,
                 "polygon": self._easy_zone
             },
             {
                 "name": "Spiral Arm",
-                "difficulty": "Medium",
+                "difficulty": Difficulty.MEDIUM,
                 "polygon": self._med_zone
             },
             {
                 "name": "Galactic Core",
-                "difficulty": "Hard",
+                "difficulty": Difficulty.HARD,
                 "polygon": self._hard_zone
             }
         ]
 
         # Storage for the zone under the mouse
         self._hovered_zone = None
-
-        # Empty vector to use in conjunction with the drawing tools
-        self._polygon_points = []
 
     ############################################################################
     # Lifecycle hooks
@@ -74,7 +69,7 @@ class PlanetSelectorScene(SceneBase):
         """!
         @brief Called when the scene becomes active (pushed or changed)
         """
-        pass
+        print(f"Entering {self.__class__.__name__}")
 
     ############################################################################
 
@@ -93,7 +88,7 @@ class PlanetSelectorScene(SceneBase):
         @param events Pygame events
         """
         # Used for collecting points when figuring out where polygons should be
-        #PolygonUtils.handle_polygon_input(events, self._polygon_points)
+        ShapeUtils.handle_polygon_input(events, self._polygon_points)
 
         for event in events:
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
@@ -101,6 +96,8 @@ class PlanetSelectorScene(SceneBase):
                 # polygon that click is in
                 if self._hovered_zone:
                     print("Selected:", self._hovered_zone["name"])
+                    self._app.game_state.difficulty = self._hovered_zone["difficulty"]
+                    self._app.scene_manager.change_scene(PlanetSelectionScene(self._app))
 
     ############################################################################
 
@@ -116,7 +113,7 @@ class PlanetSelectorScene(SceneBase):
         self._hovered_zone = None
 
         for zone in self._zones:
-            if PolygonUtils.point_in_polygon(self._mouse_pos, zone["polygon"]):
+            if ShapeUtils.point_in_polygon(self._mouse_pos, zone["polygon"]):
                 self._hovered_zone = zone
                 break
 
@@ -127,17 +124,12 @@ class PlanetSelectorScene(SceneBase):
         @brief Re-draw the scene
         @param screen Game screen to draw to
         """
-        # Get logical surface size
-        logical_width, logical_height = screen.get_size()
+        # Clear
+        screen.fill((0,0,0))
 
-        # Galaxy background
-        background = self._asset_manager.get_image("galaxy-large")
-        # Scale background
-        bg_scaled = pygame.transform.scale(background,
-                                          (logical_width, logical_height))
-
-        # Draw it
-        screen.blit(bg_scaled, (0, 0))
+        DrawingUtils.draw_fullscreen_background(screen,
+                                                self._app.asset_manager,
+                                                "galaxy-large")
 
         # Draw debug polygon
         #PolygonUtils.draw_polygon(screen, self._polygon_points)
